@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import joblib
 
 st.set_page_config(page_title="Learning Analytics Dashboard", layout="wide")
@@ -45,8 +46,11 @@ risk_status = "At-Risk" if prediction == 1 else "Not At-Risk"
 risk_color = "inverse" if prediction == 1 else "normal"
 
 # 5. Display Real KPI Metrics
+raw_score = student_record['avg_score']
+display_score = "N/A" if pd.isna(raw_score) else f"{raw_score:.1f}%"
+
 col1, col2, col3 = st.columns(3)
-col1.metric("Current Average Score", f"{student_record['avg_score']:.1f}%")
+col1.metric("Current Average Score", display_score)
 col2.metric("VLE Engagement (Clicks)", f"{int(student_record['total_vle_clicks'])}")
 col3.metric("AI Risk Prediction", risk_status, delta_color=risk_color)
 
