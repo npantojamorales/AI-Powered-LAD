@@ -17,8 +17,8 @@ pip install pandas numpy scikit-learn shap streamlit matplotlib seaborn joblib
 
 ## 📁 Project Structure
 * `eda_script.py`: Generates missing values tables and correlation heatmaps for exploratory data analysis.
-* `train_model.py`: Preprocesses the OULAD data, trains the Random Forest classifier, generates the SHAP summary plot, and exports the backend model/data.
-* `app.py`: The main Streamlit dashboard application.
+* `training_model.py`: Preprocesses the OULAD data, trains the Random Forest classifier, generates the SHAP summary plot, and exports the backend model/data.
+* `streamlit_app.py`: The main Streamlit dashboard application.
 * **Data Requirements**: The system requires the raw OULAD files (`studentInfo.csv`, `studentAssessment.csv`, and `studentVle.csv`) to be placed in the project root folder prior to execution.
 
 ## 🏃‍♂️ How to Run the System
