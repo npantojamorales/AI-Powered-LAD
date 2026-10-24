@@ -20,7 +20,7 @@ except FileNotFoundError:
     st.stop()
 
 # Dashboard Header
-st.title("🎓 Integrated AI-Powered Learning Analytics Dashboard")
+st.title("Integrated AI-Powered Learning Analytics Dashboard")
 st.markdown("### Student Success & Early Intervention System")
 st.markdown("---")
 
@@ -60,14 +60,14 @@ st.markdown("---")
 left_column, right_column = st.columns([2, 1])
 
 with left_column:
-    st.subheader("💡 AI Intervention Recommendation")
+    st.subheader("AI Intervention Recommendation")
     if prediction == 1:
         st.error("**Recommended Action:** Schedule proactive 1-on-1 Advising. The model flags this student as At-Risk based on their current engagement and academic profile.")
     else:
         st.success("**Recommended Action:** No immediate intervention required. Continue standard monitoring.")
 
 with right_column:
-    st.subheader("🔍 Explainable AI (SHAP)")
+    st.subheader("Explainable AI (SHAP)")
     try:
         st.image("shap_summary_plot.png", caption="Global Feature Impact on Risk Prediction", use_container_width=True)
     except FileNotFoundError:
