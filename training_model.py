@@ -12,7 +12,7 @@ student_info = pd.read_csv('studentInfo.csv')
 student_assessment = pd.read_csv('studentAssessment.csv')
 student_vle = pd.read_csv('studentVle.csv')
 
-# 1. Feature Engineering (Replicating Days 1-2 structure)
+# 1. Feature Engineering
 avg_scores = student_assessment.groupby('id_student')['score'].mean().reset_index()
 avg_scores.rename(columns={'score': 'avg_score'}, inplace=True)
 
@@ -75,7 +75,7 @@ else:
 
 shap.summary_plot(shap_to_plot, X_sample, show=False)
 
-# Save the plot for the midterm report
+# Save the plot for midterm report
 output_filename = 'shap_summary_plot.png'
 plt.savefig(output_filename, bbox_inches='tight', dpi=300)
 print(f"\nSHAP plot saved successfully as '{output_filename}'.")
