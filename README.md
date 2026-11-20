@@ -50,7 +50,7 @@ Because of GitHub's 100 MB file size limit, the raw OULAD files are excluded fro
 
 ### Optional: Retraining the Model Locally
 If you want to re-run EDA, model training, or algorithm benchmarking from scratch:
-1. Download the raw OULAD files (`studentInfo.csv`, `studentAssessment.csv`, and `studentVle.csv`) and place them in the project root directory.
+1. Download the [raw OULAD files](https://www.kaggle.com/datasets/anlgrbz/student-demographics-online-education-dataoulad/data) (`studentInfo.csv`, `studentAssessment.csv`, and `studentVle.csv`) and place them in the project root directory.
 2. **(Optional) Run Exploratory Data Analysis:**
    ```bash
    python eda_script.py
