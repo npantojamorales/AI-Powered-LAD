@@ -104,7 +104,7 @@ with tab2:
     st.subheader(f"Class Roster: {selected_subject}")
     st.write("Overview of all students currently enrolled in this subject, including their AI-predicted risk status and recommended interventions.")
     
-    # --- NEW LOGIC: Generate live predictions for the entire class ---
+    # --- Generate live predictions for the entire class ---
     # 1. Prepare the data for the whole class exactly like Tab 1
     class_features = pd.get_dummies(class_data)
     class_features = class_features.reindex(columns=model_features, fill_value=0)
@@ -128,10 +128,10 @@ with tab2:
 
     st.divider()
     
-    # 4. Map the Status using the Live_Prediction (NOT the old CSV column)
+    # 4. Map the Status using the Live_Prediction
     class_data_display['Predicted Status'] = class_data_display['Live_Prediction'].apply(lambda x: "🔴 At-Risk" if x == 1 else "🟢 On Track")
     
-    # Define the rule-based logic for the entire class (updated to use Live_Prediction)
+    # Define the rule-based logic for the entire class
     def determine_action(row):
         if row['Live_Prediction'] == 0:
             return "✅ Monitor"
