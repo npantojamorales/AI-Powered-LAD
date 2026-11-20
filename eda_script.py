@@ -62,7 +62,7 @@ sns.heatmap(numeric_df.corr(), annot=True, cmap='Blues', fmt=".2f", linewidths=0
 plt.title('Correlation Matrix: Academic & Behavioral Features', pad=20)
 plt.tight_layout()
 
-# Save the plot directly for your midterm report
+# Save the plot for midterm report
 output_filename = 'oulad_correlation_heatmap.png'
 plt.savefig(output_filename, dpi=300)
 print(f"\nHeatmap saved successfully as '{output_filename}'.")
