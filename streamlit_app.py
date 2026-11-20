@@ -102,25 +102,70 @@ with tab1:
 # --- TAB 2: Class Roster ---
 with tab2:
     st.subheader(f"Class Roster: {selected_subject}")
-    st.write("Overview of all students currently enrolled in this subject.")
+    st.write("Overview of all students currently enrolled in this subject, including their AI-predicted risk status and recommended interventions.")
     
-    # Create a simplified dataframe for the teacher view
-    display_df = class_data[['id_student', 'gender', 'highest_education', 'total_vle_clicks', 'avg_score']].copy()
-    display_df.columns = ['Student ID', 'Gender', 'Education Level', 'Total Clicks', 'Average Score']
+    # --- NEW LOGIC: Generate live predictions for the entire class ---
+    # 1. Prepare the data for the whole class exactly like Tab 1
+    class_features = pd.get_dummies(class_data)
+    class_features = class_features.reindex(columns=model_features, fill_value=0)
     
+    # 2. Make Live AI Predictions for everyone
+    class_predictions = rf_model.predict(class_features)
+    
+    # 3. Create display dataframe and assign the live AI predictions
+    class_data_display = class_data.copy()
+    class_data_display['Live_Prediction'] = class_predictions
+    
+    # Update the summary metrics to use the AI's live predictions
+    total_students = len(class_data_display)
+    at_risk_count = class_data_display['Live_Prediction'].sum()
+    on_track_count = total_students - at_risk_count
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Enrolled", total_students)
+    col2.metric("🟢 On Track", on_track_count)
+    col3.metric("🔴 At-Risk", at_risk_count)
+
+    st.divider()
+    
+    # 4. Map the Status using the Live_Prediction (NOT the old CSV column)
+    class_data_display['Predicted Status'] = class_data_display['Live_Prediction'].apply(lambda x: "🔴 At-Risk" if x == 1 else "🟢 On Track")
+    
+    # Define the rule-based logic for the entire class (updated to use Live_Prediction)
+    def determine_action(row):
+        if row['Live_Prediction'] == 0:
+            return "✅ Monitor"
+        else:
+            clicks = row['total_vle_clicks']
+            score = row['avg_score']
+            if pd.isna(score) or clicks < 50:
+                return "🚨 Wellness Check"
+            elif score < 70:
+                return "📚 1-on-1 Tutoring"
+            else:
+                return "✉️ Proactive Message"
+                
+    # Apply the logic to create the new column
+    class_data_display['Recommended Action'] = class_data_display.apply(determine_action, axis=1)
+    
+    # 5. Select and rename the columns to make it look clean
+    display_df = class_data_display[['id_student', 'Predicted Status', 'Recommended Action', 'gender', 'highest_education', 'total_vle_clicks', 'avg_score']]
+    display_df.columns = ['Student ID', 'Predicted Status', 'Recommended Action', 'Gender', 'Education Level', 'Total Clicks', 'Average Score']
+    
+    # 6. Render the updated table
     st.dataframe(display_df, use_container_width=True, hide_index=True)
 
 # --- TAB 3: SHAP Chart & Logic ---
 with tab3:
     st.subheader("How the AI Makes Decisions")
     st.markdown("""
-    This platform uses a machine learning model to evaluate student risk. The chart below illustrates the **global decision logic** of the AI. 
-    
-    **How to read this chart:**
-    * **Features at the top** (like VLE Clicks and Average Score) have the heaviest impact on the student's final risk status.
-    * **Red dots pushed to the right** indicate that low academic scores and low digital engagement actively drive a student toward the 'At-Risk' category.
-    * **Blue dots pushed to the left** indicate that high engagement protects a student and keeps them 'On Track'.
-    """)
+This platform uses a machine learning model to evaluate student risk. The chart below illustrates the **global decision logic** of the AI.
+
+**How to read this chart:**
+- **Features at the top** (like VLE Clicks and Average Score) have the heaviest impact on the student's final risk status.
+- **Blue dots pushed to the right** indicate that low academic scores and low digital engagement actively drive a student toward the 'At-Risk' category.
+- **Red dots pushed to the left** indicate that high engagement and strong scores protect a student and keep them 'On Track'.
+""")
     
     try:
         st.image("shap_summary_plot.png", width=500)
